@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from __future__ import print_function
 
 import markovify
@@ -67,6 +68,7 @@ class Author(object):
             return result
 
         if find(name + "_" + str(state_size) + ".json", scripts_directory):
+            print("Found:", name)
             with open(scripts_directory + name + "_" + str(state_size) + ".json") as json_data:
                 model_json = json.load(json_data)
             return POSifiedText.from_json(model_json)
