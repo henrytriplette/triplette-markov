@@ -29,12 +29,12 @@ class Author(object):
                                         by `next_speaker`
         relationships_limit (num):  used as the upper random number limit by `choose_next_speaker`
     """
-    def __init__(self, name, state_size=2):
+    def __init__(self, name, state_size=2, load_only=False):
         self.name = name
-        self.model = self.get_or_generate_model(self.name, state_size)
+        self.model = self.get_or_generate_model(self.name, state_size, load_only)
 
     @staticmethod
-    def get_or_generate_model(name, state_size, scripts_location="/generated/", input_location="/input/"):
+    def get_or_generate_model(name, state_size, load_only, scripts_location="/generated/", input_location="/input/"):
         """
         Retrieve a stored model or generate a new one and store it
         Generating models can be a time-intensive process, especially during testing, but thankfully Markovify offers a
@@ -72,13 +72,9 @@ class Author(object):
             with open(scripts_directory + name + "_" + str(state_size) + ".json") as json_data:
                 model_json = json.load(json_data)
             return POSifiedText.from_json(model_json)
-        else:
-            text = io.open(scripts_input + name + '.txt', 'r', encoding='utf-8')
-            model = POSifiedText(text, state_size=state_size)
-            model_json = model.to_json()
-            with open(scripts_directory + name + "_" + str(state_size) + ".json", "w") as json_data:
-                json.dump(model_json, json_data, indent=4)
-            return model
+        else: # Skip missing author
+            print("Missing {}.json - Use generate.py to compile;".format(name + "_" + str(state_size)))
+            return False
 
 class POSifiedText(markovify.Text):
     def word_split(self, sentence):

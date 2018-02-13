@@ -39,18 +39,20 @@ if __name__ == "__main__":
             return result
 
     def main(argv):
-        spacy_language = 'it';
+        spacy_language = 'it'
         try:
-            opts, args = getopt.getopt(argv,"hl:",["language="])
+            opts, args = getopt.getopt(argv,"hl:d:",["language=","depth="])
         except getopt.GetoptError:
-            print('generate.py -l it')
+            print('generate.py -l it -d 2')
             sys.exit(2)
         for opt, arg in opts:
             if opt == '-h':
-                print('generate.py -l <language code for spacy>')
+                print('generate.py -l <language code for spacy> -d <depth, int>')
                 sys.exit()
             elif opt in ("-l", "--language"):
                 spacy_language = arg
+            elif opt in ("-d", "--depth"):
+                state_size = int(arg)
         print("Spacy set to {} language;".format(spacy_language))
         print("--------------------")
 
@@ -67,7 +69,7 @@ if __name__ == "__main__":
                     nlp = spacy.load(spacy_language)
 
                     text = io.open(input_directory + filename_clean + '.txt', 'r', encoding='utf-8')
-                    model = author.POSifiedText(text, 2)
+                    model = author.POSifiedText(text, state_size)
                     model_json = model.to_json()
                     with open(scripts_directory + filename_clean + "_" + str(state_size) + ".json", "w") as json_data:
                         json.dump(model_json, json_data, indent=4)

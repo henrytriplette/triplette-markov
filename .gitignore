@@ -102,3 +102,6 @@ ENV/
 # custom
 output/*
 utility/input/*
+input/*
+generated/*
+!*.gitkeep

@@ -5,6 +5,7 @@ import markovify
 import os
 import re
 import sys, getopt
+import random
 
 import author
 
@@ -36,18 +37,21 @@ if __name__ == "__main__":
         return clean_str
 
     def main(argv):
+        input_state_size = 2;
         output_lenght = 5;
         output_total = 5;
         output_file = False
         try:
-            opts, args = getopt.getopt(argv,"hl:t:o:",["length=","total=","output="])
+            opts, args = getopt.getopt(argv,"hd:l:t:o:",["depth=","length=","total=","output="])
         except getopt.GetoptError:
-            print('index.py -l 5 -t 5 -o output.txt')
+            print('index.py -d 2 -l 5 -t 5 -o output')
             sys.exit(2)
         for opt, arg in opts:
             if opt == '-h':
-                print('index.py -l <lenght of rows> -t <total texts>')
+                print('index.py -d <depth> -l <lenght of rows> -t <total texts> -o <output-filename>')
                 sys.exit()
+            elif opt in ("-d", "--depth"):
+                input_state_size = int(arg)
             elif opt in ("-l", "--length"):
                 output_lenght = int(arg)
             elif opt in ("-t", "--total"):
@@ -60,20 +64,43 @@ if __name__ == "__main__":
             print("Saving into {}.txt;".format(output_file))
         print("--------------------")
 
-        # Build the model.
-        model_aretino = author.Author('aretino')
-        model_aristotele = author.Author('aristotele')
-        model_baudelaire = author.Author('baudelaire')
-        model_lovecraft = author.Author('lovecraft')
-        model_irving = author.Author('washington_irving')
-        model_john_keats = author.Author('john_keats')
-        model_john_milton = author.Author('john_milton')
-        model_edgar_allan_poe = author.Author('edgar_allan_poe')
-        model_plato = author.Author('plato')
+        # Load authors in generated
+        authors = {}
+        author_available = []
+        for file in os.listdir( scripts_directory ):
+            if file.endswith("_" + str(input_state_size) + ".json"):
+                filename_clean = file.replace(".json", "")
+                #remove last part from author name
+                filename_clean = filename_clean[:-2]
+                filename_author = author.Author(filename_clean, input_state_size)
+                if filename_author != False:
+                    print("- Loaded {} author;".format(filename_clean + " " + str(input_state_size)))
+                    authors[filename_clean] = filename_author
+                    author_available.append(filename_clean)
+
+        author_selected = []
+        author_choose = ""
+
+        while author_choose != "run":
+            author_choose = input("Insert author name or run to proceed: ")
+            if author_choose in author_available:
+                author_selected.append(author_choose)
+                print("Currently selected:")
+                print(author_selected)
+            else:
+                print("That is not a valid input. Please choose between:")
+                print(author_available)
 
         print("--------------------")
 
-        text_model = markovify.combine([ model_lovecraft.model, model_baudelaire.model ], [ 0.25, 0.75 ])
+        # Build the model.
+        author_tocombine = []
+        for author_toload in author_selected:
+            if authors[author_toload].model:
+                author_tocombine.append(authors[author_toload].model)
+
+
+        text_model = markovify.combine(author_tocombine)
 
         # Print/save five randomly-generated sentences
         if output_file != False:
