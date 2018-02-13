@@ -73,6 +73,6 @@ if __name__ == "__main__":
                     model_json = model.to_json()
                     with open(scripts_directory + filename_clean + "_" + str(state_size) + ".json", "w") as json_data:
                         json.dump(model_json, json_data, indent=4)
-                    print("Generated cache for {};".format(filename_clean))
+                    print("- Generated cache for {};".format(filename_clean))
 
     main(sys.argv[1:])

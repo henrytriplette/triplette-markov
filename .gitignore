@@ -100,8 +100,9 @@ ENV/
 .mypy_cache/
 
 # custom
-output/*
-utility/input/*
-input/*
-generated/*
-!*.gitkeep
+output/*.*
+utility/input/*.*
+input/*.*
+generated/*.*
+
+!*.keep

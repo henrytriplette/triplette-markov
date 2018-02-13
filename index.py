@@ -72,10 +72,10 @@ if __name__ == "__main__":
                 filename_clean = file.replace(".json", "")
                 #remove last part from author name
                 filename_clean = filename_clean[:-2]
-                filename_author = author.Author(filename_clean, input_state_size)
-                if filename_author != False:
-                    print("- Loaded {} author;".format(filename_clean + " " + str(input_state_size)))
-                    authors[filename_clean] = filename_author
+                # filename_author = author.Author(filename_clean, input_state_size)
+                if filename_clean != False:
+                    print("- Found {} author;".format(filename_clean + " " + str(input_state_size)))
+                    # authors[filename_clean] = filename_author
                     author_available.append(filename_clean)
 
         author_selected = []
@@ -84,23 +84,40 @@ if __name__ == "__main__":
         while author_choose != "run":
             author_choose = input("Insert author name or run to proceed: ")
             if author_choose in author_available:
-                author_selected.append(author_choose)
+                author_record = {}
+                author_record['name'] = author_choose
+                author_record['weight'] = int( input("Set weight: "))
+                author_selected.append(author_record)
+
+                # Load only selected authors when requested
+                filename_author = author.Author(author_choose, input_state_size)
+                if filename_author != False:
+                    print("- Loaded {}: {} state size, {} weight;".format(author_choose,str(input_state_size),str(author_record['weight'])))
+                    authors[author_choose] = filename_author
+
                 print("Currently selected:")
                 print(author_selected)
+            elif author_choose in ("run", "RUN"):
+                print("--------------------")
             else:
                 print("That is not a valid input. Please choose between:")
                 print(author_available)
 
-        print("--------------------")
 
-        # Build the model.
+
+        # Build the model by splitting the dictionary into two separated lists.
         author_tocombine = []
+        author_toweight = []
         for author_toload in author_selected:
-            if authors[author_toload].model:
-                author_tocombine.append(authors[author_toload].model)
+            print(author_toload)
+            name = author_toload['name']
+            weight = int(author_toload['weight'])
+            if authors[name].model:
+                author_tocombine.append(authors[name].model)
+                author_toweight.append(weight)
 
-
-        text_model = markovify.combine(author_tocombine)
+        # Combine the two or more authors and their weight
+        text_model = markovify.combine(author_tocombine, author_toweight)
 
         # Print/save five randomly-generated sentences
         if output_file != False:
