@@ -6,12 +6,18 @@ import os
 import re
 import sys, getopt
 import random
+import datetime
 
 import author
 
+# List of paths used by the generator
 current_file_path = os.path.abspath(__file__)
 scripts_directory = os.path.split(current_file_path)[0] + "/generated/"
+input_directory = os.path.split(current_file_path)[0] + "/input/"
 output_directory = os.path.split(current_file_path)[0] + "/output/"
+
+# Date for filename save
+date_string = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
 if __name__ == "__main__":
 
@@ -61,7 +67,7 @@ if __name__ == "__main__":
         print("Printing {} sentences to single textblock;".format(output_lenght))
         print("Will create {} textblock;".format(output_total))
         if output_file != False:
-            print("Saving into {}.txt;".format(output_file))
+            print("Saving into {}.txt;".format(output_file + "-" + date_string))
         print("--------------------")
 
         # Load authors in generated
@@ -108,6 +114,7 @@ if __name__ == "__main__":
         # Build the model by splitting the dictionary into two separated lists.
         author_tocombine = []
         author_toweight = []
+        author_filename = ""
         for author_toload in author_selected:
             print(author_toload)
             name = author_toload['name']
@@ -115,13 +122,14 @@ if __name__ == "__main__":
             if authors[name].model:
                 author_tocombine.append(authors[name].model)
                 author_toweight.append(weight)
+                author_filename = author_filename + "_" + name
 
         # Combine the two or more authors and their weight
         text_model = markovify.combine(author_tocombine, author_toweight)
 
         # Print/save five randomly-generated sentences
         if output_file != False:
-            f = open( output_directory + output_file + ".txt", 'a')
+            f = open( output_directory + output_file + "-" + author_filename + "-" + date_string + ".txt", 'a')
             f.truncate()
             for i in range(output_total):
                 text = get_sentences(output_lenght, text_model)

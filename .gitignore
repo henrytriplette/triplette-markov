@@ -104,5 +104,6 @@ output/*.*
 utility/input/*.*
 input/*.*
 generated/*.*
+credentials/*.*
 
 !*.keep
