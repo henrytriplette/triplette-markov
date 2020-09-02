@@ -44,6 +44,8 @@ $ram_is_cheap =~ s/–/--/g;
 $ram_is_cheap =~ s/‘/'/g;
 $ram_is_cheap =~ s/…/.../g;
 
+$ram_is_cheap =~ s/[0-9]//g; # Remove numbers
+
 # loop patterns, replace with original pattern plus newline
 for my $pattern (@split_on)
 {
