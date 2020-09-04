@@ -38,8 +38,12 @@ if __name__ == "__main__":
 
         # slightly better format
         clean_str = clean_str.replace(" , ", ", ")
-        clean_str = clean_str.replace(" . ", ". ")
-        clean_str = clean_str.replace(" ; ", "; ")
+        clean_str = clean_str.replace(" . ", ".\n")
+        clean_str = clean_str.replace(" ; ", ";\n")
+
+        clean_str = clean_str.replace(" ?", "?\n")
+        clean_str = clean_str.replace(" !", "!\n")
+
         return clean_str
 
     def main(argv):
