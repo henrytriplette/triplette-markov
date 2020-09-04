@@ -12,18 +12,15 @@ import six
 import sys
 import time
 import unicodedata
+from decouple import config
 
 if sys.version.startswith('2'):
     input = raw_input  # noqa: E501,F821; pylint: disable=redefined-builtin,undefined-variable,useless-suppression
 
 import dropbox
 
-# Load Credentials from txt file
-with open('credentials/dropbox.txt') as f:
-    credentials = f.read().splitlines()
-
-# OAuth2 access token.  TODO: login etc.
-TOKEN = credentials[0]
+# Load Credentials from env file
+TOKEN = config('DROPBOX_TOKEN')
 
 current_file_path = os.path.abspath(__file__)
 input_directory = os.path.split(current_file_path)[0] + "/input/"

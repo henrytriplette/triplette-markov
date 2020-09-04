@@ -37,9 +37,9 @@ if __name__ == "__main__":
         clean_str = re.sub(r'\.([A-Z]|[a-z]|<)', r'. \1', string)
 
         # slightly better format
-        clean_str = clean_str.replace(" , ", ", ")
-        clean_str = clean_str.replace(" . ", ".\n")
-        clean_str = clean_str.replace(" ; ", ";\n")
+        clean_str = clean_str.replace(" ,", ", ")
+        clean_str = clean_str.replace(" .", ".\n")
+        clean_str = clean_str.replace(" ;", ";\n")
 
         clean_str = clean_str.replace(" ?", "?\n")
         clean_str = clean_str.replace(" !", "!\n")
