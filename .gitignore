@@ -105,5 +105,6 @@ utility/input/*.*
 input/*.*
 generated/*.*
 credentials/*.*
+.old/*
 
 !*.keep
