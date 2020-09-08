@@ -132,7 +132,7 @@ def main(argv):
     text_model = markovify.combine(author_tocombine, author_toweight)
 
     # Print/save five randomly-generated sentences
-    f = open( output_directory + output_file + "-" + author_filename + "-" + date_string + ".txt", 'a')
+    f = open( output_directory + output_file + "-" + author_filename + "-" + date_string + ".md", 'a')
     f.truncate()
     for i in range(output_total):
         text = get_sentences(output_lenght, text_model)
@@ -154,7 +154,8 @@ if __name__ == "__main__":
     try:
         while True:
             main(args)
-            upload.main()
             time.sleep(60)
     except KeyboardInterrupt:
         print('Ended!')
+
+    upload.main()

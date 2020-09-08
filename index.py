@@ -71,7 +71,7 @@ if __name__ == "__main__":
         print("Printing {} sentences to single textblock;".format(output_lenght))
         print("Will create {} textblock;".format(output_total))
         if output_file != False:
-            print("Saving into {}.txt;".format(output_file + "-" + date_string))
+            print("Saving into {}.md;".format(output_file + "-" + date_string))
         print("--------------------")
 
         # Load authors in generated
@@ -133,7 +133,7 @@ if __name__ == "__main__":
 
         # Print/save five randomly-generated sentences
         if output_file != False:
-            f = open( output_directory + output_file + "-" + author_filename + "-" + date_string + ".txt", 'a')
+            f = open( output_directory + output_file + "-" + author_filename + "-" + date_string + ".md", 'a')
             f.truncate()
             for i in range(output_total):
                 text = get_sentences(output_lenght, text_model)
